@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDiff", "JDiff\JDiff.csproj", "{98F86CFD-180E-4B67-B47A-C2C77DD6FA6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDiff.Cli", "JDiff.Cli\JDiff.Cli.csproj", "{DAC9677D-6AE6-447E-97D4-A2B5CF9CC37D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{9F8CBF0C-1847-4964-8D69-0B59D5EEAA7D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		global.json = global.json
+		LICENSE = LICENSE
+		nuget.config = nuget.config
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDiff.Tests", "JDiff.Tests\JDiff.Tests.csproj", "{E713A303-8A20-474D-B781-20D8EB1D9636}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{98F86CFD-180E-4B67-B47A-C2C77DD6FA6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98F86CFD-180E-4B67-B47A-C2C77DD6FA6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98F86CFD-180E-4B67-B47A-C2C77DD6FA6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98F86CFD-180E-4B67-B47A-C2C77DD6FA6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAC9677D-6AE6-447E-97D4-A2B5CF9CC37D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAC9677D-6AE6-447E-97D4-A2B5CF9CC37D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAC9677D-6AE6-447E-97D4-A2B5CF9CC37D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAC9677D-6AE6-447E-97D4-A2B5CF9CC37D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E713A303-8A20-474D-B781-20D8EB1D9636}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E713A303-8A20-474D-B781-20D8EB1D9636}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E713A303-8A20-474D-B781-20D8EB1D9636}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E713A303-8A20-474D-B781-20D8EB1D9636}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
