@@ -1,0 +1,48 @@
+{
+  "id": 123,
+  "name": "Updated Product",
+  "price": 31.99,
+  "inStock": false,
+  "categories": [
+    "electronics",
+    "gadgets",
+    "newCategory"
+  ],
+  "attributes": {
+    "color": "blue",
+    "size": "M",
+    "warranty": "2 years"
+  },
+  "mechanisms": [
+    {
+      "type": "automatic",
+      "power": "battery"
+    },
+    {
+      "type": "manual",
+      "power": "manual"
+    }
+  ],
+  "shipping": {
+    "method": "express",
+    "cost": 9.99,
+    "estimatedDeliveryDays": "3"
+  },
+  "reviews": [
+    {
+      "user": "user123",
+      "rating": 5,
+      "comment": "Excellent!"
+    },
+    {
+      "user": "user789",
+      "rating": 3,
+      "comment": "Average product.",
+      "date": "2020-01-01"
+    }
+  ],
+  "score": {
+    "rating": 4.5,
+    "votes": 2
+  }
+}

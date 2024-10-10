@@ -12,4 +12,15 @@ public class JDiffTests
         
         await Verify(diff);
     }
+    
+    [Fact]
+    public async Task Diff_WhenDeep_Mark()
+    {
+        var left = await Embedded.LeftAsync();
+        var right = await Embedded.RightAsync();
+        
+        var diff = left.Diff(right);
+        
+        await Verify(diff);
+    }
 }
