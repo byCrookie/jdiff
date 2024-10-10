@@ -6,7 +6,7 @@
   *categories: [
     electronics,
     gadgets,
-    -newCategory
+    newCategory
   ],
   *attributes: {
     *color: red,

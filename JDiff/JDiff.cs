@@ -8,8 +8,7 @@ public static class JDiff
 {
     public static JsonNode Diff(this JsonNode? left, JsonNode? right)
     {
-        var diffNode = DiffInternal(left, right);
-        return diffNode.Node;
+        return DiffInternal(left, right).Node;
     }
 
     private static DiffNode DiffInternal(JsonNode? left, JsonNode? right)
