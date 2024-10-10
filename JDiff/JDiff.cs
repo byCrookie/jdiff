@@ -6,12 +6,12 @@ namespace JDiff;
 
 public static class JDiff
 {
-    public static JsonNode Diff(this JsonNode? left, JsonNode? right)
+    public static JsonNode Diff(this JsonNode? left, JsonNode? right, JsonDiffOptions? jsonDiffOptions = null)
     {
-        return DiffInternal(left, right).Node;
+        return DiffInternal(left, right, jsonDiffOptions ?? new JsonDiffOptions()).Node;
     }
 
-    private static DiffNode DiffInternal(JsonNode? left, JsonNode? right)
+    private static DiffNode DiffInternal(JsonNode? left, JsonNode? right, JsonDiffOptions jsonDiffOptions)
     {
         if (left is null || right is null)
         {
@@ -36,9 +36,9 @@ public static class JDiff
         switch (left.GetValueKind())
         {
             case JsonValueKind.Object:
-                return DiffObjects(left, right);
+                return DiffObjects(left, right, jsonDiffOptions);
             case JsonValueKind.Array:
-                return DiffArrays(left, right);
+                return DiffArrays(left, right, jsonDiffOptions);
             case JsonValueKind.String:
                 var ds = DiffPrimitive<string>(left, right);
                 return new DiffNode(ds, left.DeepClone());
@@ -77,7 +77,7 @@ public static class JDiff
         return leftString.Equals(rightString) ? DiffSymbol.Unchanged : DiffSymbol.Modified;
     }
 
-    private static DiffNode DiffArrays(JsonNode left, JsonNode right)
+    private static DiffNode DiffArrays(JsonNode left, JsonNode right, JsonDiffOptions jsonDiffOptions)
     {
         if (left is JsonArray leftArray && right is JsonArray rightArray)
         {
@@ -89,7 +89,7 @@ public static class JDiff
                 var leftElement = i < leftArray.Count ? leftArray[i] : null;
                 var rightElement = i < rightArray.Count ? rightArray[i] : null;
 
-                var diffNode = DiffInternal(leftElement, rightElement);
+                var diffNode = DiffInternal(leftElement, rightElement, jsonDiffOptions);
                 diff.Add(diffNode.Node);
                 symbols.Add(diffNode.Symbol);
             }
@@ -101,7 +101,7 @@ public static class JDiff
             $"Expected both nodes to be arrays, but got {left.GetPropertyName()}:{left.GetValueKind()} and {right.GetPropertyName()}{right.GetValueKind()}");
     }
 
-    private static DiffNode DiffObjects(JsonNode left, JsonNode right)
+    private static DiffNode DiffObjects(JsonNode left, JsonNode right, JsonDiffOptions jsonDiffOptions)
     {
         if (left is JsonObject leftObject && right is JsonObject rightObject)
         {
@@ -112,18 +112,20 @@ public static class JDiff
             {
                 if (property.Right is null)
                 {
-                    diff[$"+{property.Left.Key}"] = property.Left.Value?.DeepClone();
+                    diff[$"{jsonDiffOptions.SymbolToString(DiffSymbol.Added)}{property.Left.Key}"] =
+                        property.Left.Value?.DeepClone();
                     symbols.Add(DiffSymbol.Added);
                 }
 
-                var diffNode = DiffInternal(property.Left.Value, property.Right);
-                diff[$"{diffNode.Symbol.AsString()}{property.Left.Key}"] = diffNode.Node;
+                var diffNode = DiffInternal(property.Left.Value, property.Right, jsonDiffOptions);
+                diff[$"{jsonDiffOptions.SymbolToString(diffNode.Symbol)}{property.Left.Key}"] = diffNode.Node;
                 symbols.Add(diffNode.Symbol);
             }
 
             foreach (var rightProperty in rightObject.Where(rightProperty => leftObject[rightProperty.Key] is null))
             {
-                diff[$"-{rightProperty.Key}"] = rightProperty.Value?.DeepClone();
+                diff[$"{jsonDiffOptions.SymbolToString(DiffSymbol.Removed)}{rightProperty.Key}"] =
+                    rightProperty.Value?.DeepClone();
                 symbols.Add(DiffSymbol.Removed);
             }
 
@@ -143,19 +145,6 @@ public static class JDiff
             _ when symbols.All(s => s == DiffSymbol.Added) => new DiffNode(DiffSymbol.Added, diff),
             _ when symbols.All(s => s == DiffSymbol.Removed) => new DiffNode(DiffSymbol.Removed, diff),
             _ => new DiffNode(DiffSymbol.Modified, diff)
-        };
-    }
-
-    private static string AsString(this DiffSymbol symbol)
-    {
-        return symbol switch
-        {
-            DiffSymbol.Added => "+",
-            DiffSymbol.Removed => "-",
-            DiffSymbol.Modified => "*",
-            DiffSymbol.Unchanged => "",
-            _ => throw new UnreachableException(
-                $"Unexpected symbol {symbol}, only {string.Join(", ", Enum.GetNames<DiffSymbol>())} are allowed")
         };
     }
 }

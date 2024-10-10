@@ -1,4 +1,5 @@
 ﻿using System.CommandLine;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using JDiff;
 
@@ -13,7 +14,6 @@ var rightOption = new Option<FileInfo>(
     description: "The base file to compare to.");
 rightOption.AddAlias("-r");
 rightOption.IsRequired = true;
-
 
 var rootCommand = new RootCommand("jdiff");
 rootCommand.AddOption(leftOption);
@@ -57,5 +57,11 @@ static async Task DiffAsync(FileInfo left, FileInfo right)
 
     var diff = leftNode.Diff(rightNode);
 
-    Console.WriteLine(diff.ToJsonString());
+    var options = new JsonSerializerOptions
+    {
+        WriteIndented = true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+    
+    Console.WriteLine(diff.ToJsonString(options));
 }
