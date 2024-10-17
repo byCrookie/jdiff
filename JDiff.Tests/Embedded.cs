@@ -6,21 +6,22 @@ namespace JDiff.Tests;
 
 public static class Embedded
 {
-    public static async Task<JsonNode> LeftAsync([CallerMemberName] string memberName = "")
+    public static async Task<JsonNode> LeftAsync([CallerFilePath] string sourceFile = "", [CallerMemberName] string memberName = "")
     {
-        return await Parse(true, memberName);
+        return await Parse(true, sourceFile, memberName);
     }
 
-    public static async Task<JsonNode> RightAsync([CallerMemberName] string memberName = "")
+    public static async Task<JsonNode> RightAsync([CallerFilePath] string sourceFile = "", [CallerMemberName] string memberName = "")
     {
-        return await Parse(false, memberName);
+        return await Parse(false, sourceFile, memberName);
     }
 
-    private static async Task<JsonNode> Parse(bool left = true, [CallerMemberName] string memberName = "")
+    private static async Task<JsonNode> Parse(bool left, string sourceFile, string memberName)
     {
         var assembly = Assembly.GetExecutingAssembly();
         var direction = left ? "left" : "right";
-        var resourceName = $"{assembly.GetName().Name}.{memberName}.{direction}.json";
+        var typeName = Path.GetFileNameWithoutExtension(sourceFile);
+        var resourceName = $"{assembly.GetName().Name}.{typeName}.{memberName}.{direction}.json";
         var resourceStream = assembly.GetManifestResourceStream(resourceName);
         if (resourceStream == null)
         {
