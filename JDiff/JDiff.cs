@@ -94,7 +94,7 @@ public static class JDiff
                 symbols.Add(diffNode.Symbol);
             }
 
-            return SymbolsToDiffNode(symbols, diff);
+            return new DiffNode(jsonDiffOptions.ReduceSymbols(symbols), diff);
         }
 
         throw new UnreachableException(
@@ -129,22 +129,10 @@ public static class JDiff
                 symbols.Add(DiffSymbol.Removed);
             }
 
-            return SymbolsToDiffNode(symbols, diff);
+            return new DiffNode(jsonDiffOptions.ReduceSymbols(symbols), diff);
         }
 
         throw new UnreachableException(
             $"Expected both nodes to be objects, but got {left.GetPropertyName()}:{left.GetValueKind()} and {right.GetPropertyName()}{right.GetValueKind()}");
-    }
-
-    private static DiffNode SymbolsToDiffNode(List<DiffSymbol> symbols, JsonNode diff)
-    {
-        return symbols switch
-        {
-            _ when symbols.Any(s => s == DiffSymbol.Modified) => new DiffNode(DiffSymbol.Modified, diff),
-            _ when symbols.All(s => s == DiffSymbol.Unchanged) => new DiffNode(DiffSymbol.Unchanged, diff),
-            _ when symbols.All(s => s == DiffSymbol.Added) => new DiffNode(DiffSymbol.Added, diff),
-            _ when symbols.All(s => s == DiffSymbol.Removed) => new DiffNode(DiffSymbol.Removed, diff),
-            _ => new DiffNode(DiffSymbol.Modified, diff)
-        };
     }
 }
