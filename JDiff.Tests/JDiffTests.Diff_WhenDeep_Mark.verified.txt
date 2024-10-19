@@ -3,6 +3,8 @@
   *name: Original Product,
   *price: 29.99,
   *inStock: true,
+  averageRating: null,
+  +averageSize: null,
   *categories: [
     electronics,
     gadgets,
@@ -39,6 +41,7 @@
     latitude: 12.3456,
     longitude: 78.9012
   },
+  -averagePrice: null,
   -score: {
     rating: 4.5,
     votes: 2

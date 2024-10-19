@@ -8,7 +8,7 @@ public static class JDiff
 {
     public static JsonNode Diff(this JsonNode? left, JsonNode? right, JsonDiffOptions? jsonDiffOptions = null)
     {
-        return DiffInternal(left, right, jsonDiffOptions ?? new JsonDiffOptions()).Node;
+        return DiffInternal(left, right, jsonDiffOptions ?? new JsonDiffOptions()).Node ?? new JsonObject();
     }
 
     private static DiffNode DiffInternal(JsonNode? left, JsonNode? right, JsonDiffOptions jsonDiffOptions)
@@ -25,7 +25,7 @@ public static class JDiff
                 return new DiffNode(DiffSymbol.Added, left.DeepClone());
             }
 
-            return new DiffNode(DiffSymbol.Unchanged, new JsonObject());
+            return new DiffNode(DiffSymbol.Unchanged, null);
         }
 
         if (left.GetValueKind() != right.GetValueKind())
@@ -108,21 +108,29 @@ public static class JDiff
             var symbols = new List<DiffSymbol>();
             var diff = new JsonObject();
 
-            foreach (var property in leftObject.Select(l => new { Left = l, Right = rightObject[l.Key] }))
+            foreach (var propertyZip in leftObject.Select(l =>
+                         new
+                         {
+                             Left = l,
+                             RightValue = rightObject[l.Key],
+                             AttributeExistsInRight = rightObject.ContainsKey(l.Key)
+                         }))
             {
-                if (property.Right is null)
+                if (!propertyZip.AttributeExistsInRight)
                 {
-                    diff[$"{jsonDiffOptions.SymbolToString(DiffSymbol.Added)}{property.Left.Key}"] =
-                        property.Left.Value?.DeepClone();
+                    diff[$"{jsonDiffOptions.SymbolToString(DiffSymbol.Added)}{propertyZip.Left.Key}"] =
+                        propertyZip.Left.Value?.DeepClone();
                     symbols.Add(DiffSymbol.Added);
+                    continue;
                 }
 
-                var diffNode = DiffInternal(property.Left.Value, property.Right, jsonDiffOptions);
-                diff[$"{jsonDiffOptions.SymbolToString(diffNode.Symbol)}{property.Left.Key}"] = diffNode.Node;
+                var diffNode = DiffInternal(propertyZip.Left.Value, propertyZip.RightValue, jsonDiffOptions);
+                diff[$"{jsonDiffOptions.SymbolToString(diffNode.Symbol)}{propertyZip.Left.Key}"] = diffNode.Node;
                 symbols.Add(diffNode.Symbol);
             }
 
-            foreach (var rightProperty in rightObject.Where(rightProperty => leftObject[rightProperty.Key] is null))
+            foreach (var rightProperty in
+                     rightObject.Where(rightProperty => !leftObject.ContainsKey(rightProperty.Key)))
             {
                 diff[$"{jsonDiffOptions.SymbolToString(DiffSymbol.Removed)}{rightProperty.Key}"] =
                     rightProperty.Value?.DeepClone();

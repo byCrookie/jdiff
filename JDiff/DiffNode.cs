@@ -2,4 +2,4 @@
 
 namespace JDiff;
 
-public record DiffNode(DiffSymbol Symbol, JsonNode Node);
+public record DiffNode(DiffSymbol Symbol, JsonNode? Node);

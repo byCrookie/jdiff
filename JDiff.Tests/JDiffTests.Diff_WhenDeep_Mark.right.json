@@ -3,6 +3,8 @@
   "name": "Updated Product",
   "price": 31.99,
   "inStock": false,
+  "averageRating": null,
+  "averagePrice": null,
   "categories": [
     "electronics",
     "gadgets",

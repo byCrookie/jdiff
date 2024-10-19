@@ -3,6 +3,8 @@
   "name": "Original Product",
   "price": 29.99,
   "inStock": true,
+  "averageRating": null,
+  "averageSize": null,
   "categories": [
     "electronics",
     "gadgets"
